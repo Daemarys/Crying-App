@@ -1,4 +1,4 @@
-# Days Without Crying App 🌸
+# Days Without Crying App 🥲
 
 A neo-punk themed crying tracker with baby pink aesthetics.
 
