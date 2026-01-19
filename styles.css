@@ -329,6 +329,39 @@ h1 {
     transform: rotate(90deg);
 }
 
+.modal-emoji {
+    font-size: 4rem;
+    margin: 10px 0 20px 0;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.modal-title {
+    font-size: 2rem;
+    color: #2c5f7f;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 10px 0;
+    font-weight: 900;
+}
+
+.modal-subtitle {
+    color: #6b9eb5;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
 .reasons-scroll {
     display: flex;
     flex-direction: column;

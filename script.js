@@ -31,7 +31,7 @@ const cryingReasons = [
 let selectedReason = null;
 let isCustomReason = false;
 
-// Neo punk motivational messages based on days
+// Motivational messages based on days
 const messages = {
     0: "EVERY JOURNEY STARTS WITH A SINGLE STEP! 🌱",
     1: "ONE DAY STRONG! YOU'RE AMAZING! 💪",
@@ -49,28 +49,53 @@ const messages = {
 function init() {
     updateCounter();
     setInterval(updateCounter, 60000); // Update every minute
-    
-    // Add random glitch effects
-    setInterval(randomGlitch, 5000);
-    
-    // Populate crying reasons in modal
     populateReasons();
-    
-    // Set up modal event listeners
-    setupModalListeners();
+    setupEventListeners();
 }
 
-// Random glitch effect on counter
-function randomGlitch() {
-    if (Math.random() > 0.7) {
-        daysCounter.style.animation = 'none';
-        setTimeout(() => {
-            daysCounter.style.animation = 'numberPulse 2s ease-in-out infinite, glitch 0.3s';
-            setTimeout(() => {
-                daysCounter.style.animation = 'numberPulse 2s ease-in-out infinite';
-            }, 300);
-        }, 10);
-    }
+// Setup all event listeners
+function setupEventListeners() {
+    // Reset button opens modal
+    resetBtn.addEventListener('click', openModal);
+    
+    // Modal close button
+    modalClose.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Skip button
+    skipBtn.addEventListener('click', () => {
+        confirmReset(null);
+    });
+    
+    // Confirm tears button
+    confirmTearsBtn.addEventListener('click', () => {
+        if (isCustomReason) {
+            const customText = customReasonInput.value.trim();
+            if (customText) {
+                confirmReset(customText);
+            } else {
+                showCustomAlert('⚠️ PLEASE TYPE YOUR REASON OR SKIP! ⚠️');
+            }
+        } else if (selectedReason) {
+            confirmReset(selectedReason);
+        } else {
+            showCustomAlert('⚠️ PLEASE SELECT A REASON OR SKIP! ⚠️');
+        }
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Press 'Escape' to close modal
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
 }
 
 // Calculate days since start date
@@ -95,15 +120,13 @@ function updateCounter() {
     
     if (!result) {
         daysCounter.textContent = '0';
-        startDateElement.textContent = 'CLICK "I CRIED TODAY" TO START TRACKING';
+        startDateElement.textContent = 'START TRACKING YOUR JOURNEY';
         messageElement.querySelector('.message-text').textContent = messages[0];
         return;
     }
     
     daysCounter.textContent = result.days;
     startDateElement.textContent = `SINCE ${result.startDate.toLocaleDateString().toUpperCase()}`;
-    
-    // Update motivational message
     updateMessage(result.days);
 }
 
@@ -111,7 +134,6 @@ function updateCounter() {
 function updateMessage(days) {
     let message = "KEEP GOING STRONG! YOU'RE DOING AMAZING! 💫";
     
-    // Find the closest message for the current day count
     const milestones = Object.keys(messages).map(Number).sort((a, b) => b - a);
     
     for (let milestone of milestones) {
@@ -143,40 +165,25 @@ function populateReasons() {
             
             // Add selected class to clicked item
             this.classList.add('selected');
-            selectedReason = this.dataset.reason;
+            
+            // Check if "OTHER" was selected
+            if (this.dataset.reason === "OTHER (Type your reason)") {
+                customReasonInput.classList.add('active');
+                customReasonInput.focus();
+                isCustomReason = true;
+                selectedReason = null;
+            } else {
+                customReasonInput.classList.remove('active');
+                customReasonInput.value = '';
+                isCustomReason = false;
+                selectedReason = this.dataset.reason;
+            }
         });
         
         reasonsContainer.appendChild(reasonDiv);
     });
 }
 
-// Setup modal event listeners
-function setupModalListeners() {
-    // Close modal when clicking X
-    modalClose.addEventListener('click', closeModal);
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // Skip button
-// Populate crying reasons in modal
-function populateReasons() {
-    reasonsContainer.innerHTML = '';
-    
-    // Confirm tears button
-    confirmTearsBtn.addEventListener('click', () => {
-        if (isCustomReason) {
-            const customText = customReasonInput.value.trim();
-            if (customText) {
-                confirmReset(customText);
-            } else {
-                showCustomAlert('⚠️ PLEASE TYPE YOUR REASON OR SKIP! ⚠️');
-            }
-        } else if (selectedReason) {
 // Open modal
 function openModal() {
     modal.classList.add('active');
@@ -194,40 +201,17 @@ function openModal() {
     
     // Scroll to top of reasons
     reasonsContainer.scrollTop = 0;
-}           
-            // Check if "OTHER" was selected
-            if (this.dataset.reason === "OTHER (Type your reason)") {
-                customReasonInput.classList.add('active');
-                customReasonInput.focus();
-                isCustomReason = true;
-                selectedReason = null;
-            } else {
-                customReasonInput.classList.remove('active');
-                customReasonInput.value = '';
-                isCustomReason = false;
-                selectedReason = this.dataset.reason;
-            }
-        });
-        
-        reasonsContainer.appendChild(reasonDiv);
-    });
-}   // Scroll to top of reasons
-    reasonsContainer.scrollTop = 0;
 }
 
 // Close modal
 function closeModal() {
     modal.classList.remove('active');
     selectedReason = null;
-}
-
-// Reset counter with modal
-function resetCounter() {
-    openModal();
+    isCustomReason = false;
 }
 
 // Confirm reset and log reason
-function confirmReset(reason) {
+async function confirmReset(reason) {
     const now = new Date();
     const timestamp = now.toISOString();
     
@@ -236,7 +220,7 @@ function confirmReset(reason) {
     
     // Log the crying reason
     if (reason) {
-        logCryingReason(reason, timestamp);
+        await logCryingReason(reason, timestamp);
     }
     
     // Close modal
@@ -244,19 +228,6 @@ function confirmReset(reason) {
     
     // Update counter
     updateCounter();
-    
-    // Animate the reset with glitch effect
-    daysCounter.style.animation = 'glitch 0.5s';
-    setTimeout(() => {
-        daysCounter.style.animation = 'numberPulse 2s ease-in-out infinite';
-    }, 500);
-    
-    // Flash effect on container
-    const container = document.querySelector('.container');
-    container.style.animation = 'none';
-    setTimeout(() => {
-        container.style.animation = 'containerFloat 3s ease-in-out infinite';
-    }, 10);
     
     // Show confirmation
     if (reason) {
@@ -266,7 +237,7 @@ function confirmReset(reason) {
     }
 }
 
-// Log crying reason to server (stored privately on your server)
+// Log crying reason to server
 async function logCryingReason(reason, timestamp) {
     try {
         // Send to server
@@ -285,7 +256,7 @@ async function logCryingReason(reason, timestamp) {
             console.error('Failed to log crying reason');
         }
         
-        // Also keep a local backup in localStorage for offline mode
+        // Also keep a local backup in localStorage
         let log = [];
         const existingLog = localStorage.getItem(CRYING_LOG_KEY);
         if (existingLog) {
@@ -306,6 +277,7 @@ async function logCryingReason(reason, timestamp) {
         
     } catch (error) {
         console.error('Error logging crying reason:', error);
+        
         // Fallback to localStorage only if server is unavailable
         let log = [];
         const existingLog = localStorage.getItem(CRYING_LOG_KEY);
@@ -327,121 +299,17 @@ async function logCryingReason(reason, timestamp) {
     }
 }
 
-// Export crying log to Excel (CSV format) - Only exports local backup
-// Admin can download full data from server at /api/admin/download-csv
-function exportToExcel() {
-    const log = localStorage.getItem(CRYING_LOG_KEY);
-    if (!log) {
-        // If no local data, redirect to admin endpoint
-        showCustomAlert('📊 ADMIN: DOWNLOAD FULL DATA FROM /api/admin/download-csv');
-        return;
-    }
-    
-    try {
-        const data = JSON.parse(log);
-        
-        // Create CSV content
-        let csvContent = "Date,Time,Reason\n";
-        
-        data.forEach(entry => {
-            const date = new Date(entry.timestamp);
-            const dateStr = date.toLocaleDateString();
-            const timeStr = date.toLocaleTimeString();
-            const reason = `"${entry.reason.replace(/"/g, '""')}"`;
-            csvContent += `${dateStr},${timeStr},${reason}\n`;
-        });
-        
-        // Create blob and download
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        
-        link.setAttribute('href', url);
-        link.setAttribute('download', `crying_log_local_${new Date().getTime()}.csv`);
-        link.style.visibility = 'hidden';
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } catch (e) {
-        console.error('Error exporting to Excel:', e);
-    }
-}
-
-// Reset counter (old function - now opens modal instead)
-// Reset counter (old function - now opens modal instead)
-function oldResetCounter() {
-    // Create custom confirmation with styling
-    const confirmed = confirm('⚠️ RESET COUNTER? ⚠️\n\nIT\'S OKAY - TOMORROW IS A NEW DAY! 💙');
-    
-    if (confirmed) {
-        const now = new Date().toISOString();
-        localStorage.setItem(STORAGE_KEY, now);
-        updateCounter();
-        
-        // Animate the reset with glitch effect
-        daysCounter.style.animation = 'glitch 0.5s';
-        setTimeout(() => {
-            daysCounter.style.animation = 'numberPulse 2s ease-in-out infinite';
-        }, 500);
-        
-        // Flash effect on container
-        const container = document.querySelector('.container');
-        container.style.animation = 'none';
-        setTimeout(() => {
-            container.style.animation = 'containerFloat 3s ease-in-out infinite';
-        }, 10);
-    }
-}
-
-// Share progress with cyberpunk flair
-function shareProgress() {
-    const result = calculateDays();
-    
-    if (!result) {
-        showCustomAlert('⚠️ START TRACKING FIRST! ⚠️');
-        return;
-    }
-    
-    const shareText = `🌸 I'VE GONE ${result.days} DAYS WITHOUT CRYING! 💪✨\n\n#DaysWithoutCrying #NeoPunkVibes`;
-    
-    // Try to use Web Share API if available
-    if (navigator.share) {
-        navigator.share({
-            title: 'DAYS WITHOUT CRYING',
-            text: shareText,
-            url: window.location.href
-        }).catch(err => {
-            if (err.name !== 'AbortError') {
-                copyToClipboard(shareText);
-            }
-        });
-    } else {
-        // Fallback: copy to clipboard
-        copyToClipboard(shareText);
-    }
-}
-
-// Copy to clipboard with custom notification
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showCustomAlert('✅ PROGRESS COPIED TO CLIPBOARD! 📋');
-    }).catch(() => {
-        showCustomAlert(text);
-    });
-}
-
-// Custom alert function for neo punk theme
+// Custom alert function
 function showCustomAlert(message) {
-    // Create temporary alert overlay
     const alertBox = document.createElement('div');
     alertBox.style.cssText = `
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, var(--baby-pink) 0%, var(--hot-pink) 100%);
-        border: 4px solid var(--neon-pink);
+        background: linear-gradient(135deg, #6AB4E8, #4A90E2);
+        border: 4px solid #87CEEB;
+        border-radius: 20px;
         padding: 30px 40px;
         color: white;
         font-family: 'Orbitron', monospace;
@@ -449,8 +317,7 @@ function showCustomAlert(message) {
         font-weight: 700;
         text-align: center;
         z-index: 10000;
-        box-shadow: 0 0 40px var(--neon-pink), 8px 8px 0 var(--dark-pink);
-        animation: glitch 0.3s;
+        box-shadow: 0 0 40px rgba(74, 144, 226, 0.6);
         text-transform: uppercase;
         letter-spacing: 2px;
         max-width: 80%;
@@ -464,9 +331,10 @@ function showCustomAlert(message) {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-// Event listeners
-resetBtn.addEventListener('click', resetCounter);
+        background: rgba(44, 62, 80, 0.8);
+        z-index: 9999;
+    `;
+    
     document.body.appendChild(overlay);
     document.body.appendChild(alertBox);
     
@@ -476,32 +344,9 @@ resetBtn.addEventListener('click', resetCounter);
     }, 2000);
 }
 
-// Event listeners
-resetBtn.addEventListener('click', resetCounter);
-shareBtn.addEventListener('click', shareProgress);
-
-// Add hover sound effects (optional - visual feedback)
-const buttons = document.querySelectorAll('.btn');
-buttons.forEach(btn => {
-// Add keyboard shortcuts for neo punk experience
-document.addEventListener('keydown', (e) => {
-    // Press 'R' to reset (open modal)
-    if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey && !customReasonInput.classList.contains('active')) {
-        resetCounter();
-    }
-    // Press 'Escape' to close modal
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});     shareProgress();
-    }
-    // Press 'Escape' to close modal
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-    // Press 'E' to export crying log manually
-    if (e.key.toLowerCase() === 'e' && !e.ctrlKey && !e.metaKey) {
-        exportToExcel();
-        showCustomAlert('📊 CRYING LOG EXPORTED TO EXCEL! 📋');
-    }
-});
+// Start the app when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
