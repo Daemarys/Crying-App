@@ -7,9 +7,51 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="glitch-overlay"></div>
+    <div class="decorative-stars">
+        <div class="star star-1">✦</div>
+        <div class="star star-2">✦</div>
+        <div class="star star-3">✦</div>
+        <div class="star star-4">✦</div>
+        <div class="star star-5">✦</div>
+    </div>
+    
     <div class="container">
-        <h1 class="glitch" data-text="DAYS WITHOUT CRYING">DAYS WITHOUT CRYING</h1>
+        <!-- Decorative elements -->
+        <div class="decor-top-left">
+            <div class="constellation">
+                <span class="dot">✦</span>
+                <span class="dot">✦</span>
+                <span class="dot">✦</span>
+            </div>
+        </div>
+        
+        <div class="decor-top-right">
+            <div class="plant">🪴</div>
+        </div>
+        
+        <div class="decor-bottom-left">
+            <div class="plant">🪴</div>
+        </div>
+        
+        <div class="decor-bottom-right">
+            <div class="constellation">
+                <span class="dot">✦</span>
+                <span class="dot">✦</span>
+                <span class="dot">✦</span>
+            </div>
+        </div>
+        
+        <!-- Clouds -->
+        <div class="cloud cloud-1">☁️</div>
+        <div class="cloud cloud-2">☁️</div>
+        
+        <!-- Plus signs -->
+        <div class="plus plus-1">+</div>
+        <div class="plus plus-2">+</div>
+        <div class="plus plus-3">+</div>
+        <div class="plus plus-4">+</div>
+        
+        <h1>DAYS WITHOUT CRYING</h1>
         
         <div class="counter-display">
             <div class="days-number" id="daysCounter">0</div>
@@ -20,28 +62,21 @@
             <p id="startDate">START TRACKING YOUR JOURNEY</p>
         </div>
         
-        <div class="button-group">
-            <button id="resetBtn" class="btn btn-reset">
-                <span class="btn-text">I CRIED TODAY 😢</span>
-                <span class="btn-glitch"></span>
-            </button>
-        </div>
+        <button id="resetBtn" class="what-happened-btn">
+            WHAT HAPPENED?
+        </button>
         
         <!-- Modal Popup for Crying Reasons -->
         <div id="cryingModal" class="modal">
             <div class="modal-content">
                 <button class="modal-close" id="modalClose">×</button>
-                <div class="modal-header">
-                    <span class="modal-emoji">😰</span>
-                    <h2>WHAT HAPPENED?</h2>
-                    <p class="modal-subtitle">(Optional, but it makes the stats funnier)</p>
+                
+                <div class="reasons-scroll" id="reasonsContainer">
+                    <!-- Reasons will be populated by JavaScript -->
                 </div>
-                <div class="modal-body">
-                    <div class="reasons-container" id="reasonsContainer">
-                        <!-- Reasons will be populated by JavaScript -->
-                    </div>
-                    <input type="text" id="customReasonInput" class="custom-reason-input" placeholder="Type your reason here..." maxlength="100">
-                </div>
+                
+                <input type="text" id="customReasonInput" class="custom-reason-input" placeholder="Type your reason here..." maxlength="100">
+                
                 <div class="modal-footer">
                     <button id="skipBtn" class="btn-modal btn-skip">SKIP</button>
                     <button id="confirmTearsBtn" class="btn-modal btn-confirm">CONFIRM TEARS</button>
@@ -51,13 +86,6 @@
         
         <div class="motivational-message" id="message">
             <span class="message-text">YOU'RE DOING GREAT! KEEP GOING! 💪</span>
-        </div>
-        
-        <div class="neo-punk-decoration">
-            <div class="pixel-corner tl"></div>
-            <div class="pixel-corner tr"></div>
-            <div class="pixel-corner bl"></div>
-            <div class="pixel-corner br"></div>
         </div>
     </div>
     
