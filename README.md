@@ -1,7 +1,6 @@
 # Days Without Crying App 🥲
 
-A neo-punk themed crying tracker with baby pink aesthetics.
-
+Just an app to track Workplace Emotional Safety 💙
 ## Setup Instructions
 
 ### Local Development
