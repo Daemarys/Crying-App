@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Days Without Crying</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px;
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .admin-header h1 {
+            font-size: 2.5rem;
+            color: var(--white);
+            text-shadow: 
+                3px 3px 0 var(--neon-pink),
+                0 0 20px var(--neon-pink);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--baby-pink) 0%, var(--hot-pink) 100%);
+            border: 4px solid var(--neon-pink);
+            padding: 30px;
+            text-align: center;
+            box-shadow: 
+                0 0 20px var(--neon-pink),
+                8px 8px 0 var(--dark-pink);
+        }
+        
+        .stat-number {
+            font-size: 4rem;
+            color: var(--white);
+            font-weight: 900;
+            text-shadow: 3px 3px 0 var(--neon-pink);
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .admin-btn {
+            padding: 20px 40px;
+            font-size: 1.1rem;
+            border: 3px solid var(--white);
+            background: var(--black);
+            color: var(--baby-pink);
+            cursor: pointer;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 
+                4px 4px 0 var(--white),
+                0 0 20px rgba(255, 20, 147, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: var(--baby-pink);
+            color: var(--black);
+            transform: translate(-2px, -2px);
+            box-shadow: 
+                6px 6px 0 var(--white),
+                0 0 30px var(--neon-pink);
+        }
+        
+        .top-reasons {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neon-pink);
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 
+                0 0 20px var(--neon-pink),
+                8px 8px 0 var(--dark-pink);
+        }
+        
+        .top-reasons h2 {
+            color: var(--neon-pink);
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .reason-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 179, 217, 0.2);
+            border-left: 5px solid var(--neon-pink);
+        }
+        
+        .reason-text {
+            flex: 1;
+            color: var(--black);
+            font-weight: 700;
+        }
+        
+        .reason-count {
+            background: var(--neon-pink);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 900;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            border: 3px solid var(--white);
+            background: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: var(--white);
+            color: var(--neon-pink);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🔐 ADMIN DASHBOARD 🔐</h1>
+            <p style="color: var(--light-pink); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;">
+                Days Without Crying - Analytics
+            </p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalEntries">0</div>
+                <div class="stat-label">Total Tears</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="uniqueReasons">0</div>
+                <div class="stat-label">Unique Reasons</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayEntries">0</div>
+                <div class="stat-label">Tears Today</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="admin-btn" onclick="downloadCSV()">📥 DOWNLOAD CSV</button>
+            <button class="admin-btn" onclick="refreshStats()">🔄 REFRESH STATS</button>
+            <button class="admin-btn" onclick="viewRawData()">📊 VIEW RAW DATA</button>
+        </div>
+        
+        <div class="top-reasons">
+            <h2>🏆 Top 10 Crying Reasons 🏆</h2>
+            <div id="topReasonsList">
+                <p style="text-align: center; color: #666;">Loading data...</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="/" class="back-link">← BACK TO APP</a>
+        </div>
+    </div>
+    
+    <script>
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('totalEntries').textContent = data.totalEntries;
+                document.getElementById('uniqueReasons').textContent = data.topReasons.length;
+                
+                // Calculate today's entries
+                const today = new Date().toDateString();
+                const todayCount = data.allData.filter(entry => {
+                    return new Date(entry.timestamp).toDateString() === today;
+                }).length;
+                document.getElementById('todayEntries').textContent = todayCount;
+                
+                // Display top reasons
+                const topReasonsList = document.getElementById('topReasonsList');
+                if (data.topReasons.length === 0) {
+                    topReasonsList.innerHTML = '<p style="text-align: center; color: #666;">No data yet!</p>';
+                } else {
+                    topReasonsList.innerHTML = data.topReasons.map((item, index) => `
+                        <div class="reason-row">
+                            <span style="color: var(--neon-pink); font-weight: 900; margin-right: 15px; font-size: 1.5rem;">
+                                ${index + 1}
+                            </span>
+                            <span class="reason-text">${item.reason}</span>
+                            <span class="reason-count">${item.count}</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                alert('Error loading stats. Make sure the server is running!');
+            }
+        }
+        
+        function downloadCSV() {
+            window.location.href = '/api/admin/download-csv';
+        }
+        
+        function refreshStats() {
+            loadStats();
+        }
+        
+        async function viewRawData() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                const data = await response.json();
+                
+                const jsonStr = JSON.stringify(data.allData, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `crying_data_raw_${Date.now()}.json`;
+                link.click();
+            } catch (error) {
+                console.error('Error downloading raw data:', error);
+            }
+        }
+        
+        // Load stats on page load
+        loadStats();
+    </script>
+</body>
+</html>

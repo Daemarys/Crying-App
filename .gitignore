@@ -1,0 +1,5 @@
+node_modules/
+crying_data.json
+*.csv
+.env
+.DS_Store

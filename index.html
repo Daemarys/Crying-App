@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Without Crying</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="glitch-overlay"></div>
+    <div class="container">
+        <h1 class="glitch" data-text="DAYS WITHOUT CRYING">DAYS WITHOUT CRYING</h1>
+        
+        <div class="counter-display">
+            <div class="days-number" id="daysCounter">0</div>
+            <div class="days-label">DAYS</div>
+        </div>
+        
+        <div class="date-info">
+            <p id="startDate">START TRACKING YOUR JOURNEY</p>
+        </div>
+        
+        <div class="button-group">
+            <button id="resetBtn" class="btn btn-reset">
+                <span class="btn-text">I CRIED TODAY 😢</span>
+                <span class="btn-glitch"></span>
+            </button>
+            <button id="shareBtn" class="btn btn-share">
+                <span class="btn-text">SHARE PROGRESS 🎉</span>
+                <span class="btn-glitch"></span>
+            </button>
+        </div>
+        
+        <!-- Modal Popup for Crying Reasons -->
+        <div id="cryingModal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose">×</button>
+                <div class="modal-header">
+                    <span class="modal-emoji">😰</span>
+                    <h2>WHAT HAPPENED?</h2>
+                    <p class="modal-subtitle">(Optional, but it makes the stats funnier)</p>
+                </div>
+                <div class="modal-body">
+                    <div class="reasons-container" id="reasonsContainer">
+                        <!-- Reasons will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="skipBtn" class="btn-modal btn-skip">SKIP</button>
+                    <button id="confirmTearsBtn" class="btn-modal btn-confirm">CONFIRM TEARS</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="motivational-message" id="message">
+            <span class="message-text">YOU'RE DOING GREAT! KEEP GOING! 💪</span>
+        </div>
+        
+        <div class="neo-punk-decoration">
+            <div class="pixel-corner tl"></div>
+            <div class="pixel-corner tr"></div>
+            <div class="pixel-corner bl"></div>
+            <div class="pixel-corner br"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
