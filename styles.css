@@ -82,7 +82,7 @@ body::before {
 .container {
     background: linear-gradient(135deg, var(--baby-pink) 0%, var(--hot-pink) 100%);
     border: 4px solid var(--neon-pink);
-    border-radius: 0;
+    border-radius: 30px;
     padding: 60px 40px;
     text-align: center;
     max-width: 600px;
@@ -285,6 +285,7 @@ h1 {
     padding: 18px 35px;
     font-size: 1rem;
     border: 3px solid var(--white);
+    border-radius: 25px;
     background: var(--black);
     color: var(--baby-pink);
     cursor: pointer;
@@ -300,12 +301,6 @@ h1 {
     box-shadow: 
         4px 4px 0 var(--white),
         0 0 20px rgba(255, 20, 147, 0.5);
-    clip-path: polygon(
-        0 4px, 4px 4px, 4px 0,
-        calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-        100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-        4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-    );
 }
 
 .btn-text {
@@ -359,9 +354,15 @@ h1 {
     font-size: 1.3rem;
     color: var(--white);
     font-weight: 700;
+.motivational-message {
+    margin-top: 40px;
+    font-size: 1.3rem;
+    color: var(--white);
+    font-weight: 700;
     padding: 25px;
     background: rgba(0, 0, 0, 0.4);
     border: 3px solid var(--white);
+    border-radius: 20px;
     box-shadow: 
         0 0 20px var(--neon-pink),
         inset 0 0 20px rgba(255, 179, 217, 0.2);
@@ -369,18 +370,7 @@ h1 {
     overflow: hidden;
     text-transform: uppercase;
     letter-spacing: 2px;
-    clip-path: polygon(
-        0 6px, 6px 6px, 6px 0,
-        calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
-        100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
-        6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px)
-    );
-}
-
-.message-text {
-    position: relative;
-    z-index: 2;
-    text-shadow: 2px 2px 0 var(--neon-pink);
+}   text-shadow: 2px 2px 0 var(--neon-pink);
 }
 
 .motivational-message::before {
@@ -494,6 +484,7 @@ h1 {
 .modal-content {
     background: linear-gradient(135deg, var(--baby-pink) 0%, var(--hot-pink) 100%);
     border: 4px solid var(--neon-pink);
+    border-radius: 30px;
     padding: 40px;
     max-width: 600px;
     width: 90%;
@@ -506,12 +497,6 @@ h1 {
         inset 0 0 60px rgba(255, 255, 255, 0.1),
         10px 10px 0 var(--dark-pink);
     animation: modalSlideIn 0.4s ease;
-    clip-path: polygon(
-        0 10px, 10px 10px, 10px 0,
-        calc(100% - 10px) 0, calc(100% - 10px) 10px, 100% 10px,
-        100% calc(100% - 10px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%,
-        10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px)
-    );
 }
 
 @keyframes modalSlideIn {
@@ -531,6 +516,7 @@ h1 {
     right: 15px;
     background: var(--white);
     border: 3px solid var(--neon-pink);
+    border-radius: 50%;
     color: var(--neon-pink);
     font-size: 2rem;
     width: 45px;
@@ -596,7 +582,6 @@ h1 {
 .modal-body {
     margin: 25px 0;
 }
-
 .reasons-container {
     display: flex;
     flex-direction: column;
@@ -606,6 +591,8 @@ h1 {
     padding: 10px;
     background: rgba(0, 0, 0, 0.2);
     border: 2px solid var(--white);
+    border-radius: 15px;
+}   border: 2px solid var(--white);
 }
 
 .reasons-container::-webkit-scrollbar {
@@ -619,11 +606,10 @@ h1 {
 .reasons-container::-webkit-scrollbar-thumb {
     background: var(--neon-pink);
     border: 2px solid var(--white);
-}
-
 .reason-item {
     background: rgba(255, 255, 255, 0.9);
     border: 3px solid transparent;
+    border-radius: 15px;
     padding: 18px 20px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -634,11 +620,7 @@ h1 {
     font-size: 0.9rem;
     position: relative;
     box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
-    clip-path: polygon(
-        0 5px, 5px 5px, 5px 0,
-        calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
-        100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
-        5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+}       5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
     );
 }
 
@@ -678,6 +660,11 @@ h1 {
     padding: 16px 35px;
     font-size: 1rem;
     border: 3px solid var(--white);
+.btn-modal {
+    padding: 16px 35px;
+    font-size: 1rem;
+    border: 3px solid var(--white);
+    border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 900;
@@ -686,17 +673,30 @@ h1 {
     font-family: 'Orbitron', monospace;
     flex: 1;
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
-    clip-path: polygon(
-        0 5px, 5px 5px, 5px 0,
-        calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
-        100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
-        5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
-    );
 }
 
-.btn-skip {
-    background: var(--white);
+.custom-reason-input {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid var(--neon-pink);
+    border-radius: 15px;
     color: var(--black);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: none;
+}
+
+.custom-reason-input.active {
+    display: block;
+}
+
+.custom-reason-input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}   color: var(--black);
     border-color: var(--black);
 }
 

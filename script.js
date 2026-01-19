@@ -2,73 +2,34 @@
 const daysCounter = document.getElementById('daysCounter');
 const startDateElement = document.getElementById('startDate');
 const resetBtn = document.getElementById('resetBtn');
-const shareBtn = document.getElementById('shareBtn');
 const messageElement = document.getElementById('message');
 const modal = document.getElementById('cryingModal');
 const modalClose = document.getElementById('modalClose');
 const skipBtn = document.getElementById('skipBtn');
 const confirmTearsBtn = document.getElementById('confirmTearsBtn');
 const reasonsContainer = document.getElementById('reasonsContainer');
+const customReasonInput = document.getElementById('customReasonInput');
 
 // Storage keys
 const STORAGE_KEY = 'cryingAppStartDate';
 const CRYING_LOG_KEY = 'cryingLog';
 
-// Funny work-related crying reasons (inspired by Reddit and X posts)
+// Funny work-related crying reasons (top 10)
 const cryingReasons = [
     "Meeting that could've been an email",
-    "Unexpected 'quick call'",
-    "Performance review season",
-    "Client feedback",
-    "My code worked on the first try (tears of joy)",
     "Spent 3 hours debugging a missing semicolon",
     "Realized I was on mute the entire presentation",
-    "Got assigned to another 'urgent' project",
     "Coffee machine was broken",
-    "Someone ate my lunch from the fridge",
-    "Forgot to hit 'Save' before the crash",
     "Received an 'As per my last email' response",
-    "Boss cc'd everyone on my mistake",
-    "Accidentally replied-all with a meme",
-    "LinkedIn connection request from my ex",
-    "Printer jammed during important deadline",
-    "Zoom call started with camera on (not ready)",
-    "Realized I've been spelling client's name wrong for months",
-    "Got voluntold for the planning committee",
-    "IT said to 'just restart it'",
     "Found a bug in production on Friday at 4:55 PM",
-    "Slack notification at 11 PM from boss",
-    "Accidentally shared my screen with embarrassing tabs open",
-    "Calendar invite for 'Culture Building Mandatory Fun'",
-    "Got feedback to 'circle back' and 'take this offline'",
-    "Someone scheduled a meeting during my lunch break",
-    "Received a meeting invite with no agenda",
-    "My 'work bestie' got promoted and moved teams",
-    "Realized I'm the only one not on vacation this week",
-    "Got added to a group chat with 47 people",
-    "Boss asked 'Do you have a minute?' (Narrator: It was not a minute)",
-    "Imposter syndrome hit different today",
-    "Saw my salary on Glassdoor and cried",
-    "Client changed requirements after project completion",
-    "Someone used 'Reply All' to say 'Thanks'",
-    "Accidentally deleted the wrong file",
-    "Watched the intern do in 10 minutes what took me all day",
+    "Accidentally replied-all with a meme",
     "Boss said 'We need to talk' with no context",
-    "Got beaten to the last donut in the break room",
-    "Realized I sent a sarcastic message to the wrong chat",
-    "Annual review: 'Exceeds expectations' but no raise",
-    "Someone scheduled a meeting at 8 AM Monday",
-    "My 'innovative idea' was met with awkward silence",
-    "Got a LinkedIn message asking if I'm still looking for opportunities",
-    "Spent all day in back-to-back meetings, got no work done",
-    "Someone replied 'Per my last email' when I asked a new question",
     "Just existing in corporate America",
-    "Motivational Monday email from HR",
-    "Got assigned to train my replacement",
-    "Manager said 'Let's put a pin in that' (translation: never)"
+    "OTHER (Type your reason)"
 ];
 
 let selectedReason = null;
+let isCustomReason = false;
 
 // Neo punk motivational messages based on days
 const messages = {
@@ -202,31 +163,55 @@ function setupModalListeners() {
     });
     
     // Skip button
-    skipBtn.addEventListener('click', () => {
-        confirmReset(null);
-    });
+// Populate crying reasons in modal
+function populateReasons() {
+    reasonsContainer.innerHTML = '';
     
     // Confirm tears button
     confirmTearsBtn.addEventListener('click', () => {
-        if (selectedReason) {
-            confirmReset(selectedReason);
-        } else {
-            showCustomAlert('⚠️ PLEASE SELECT A REASON OR SKIP! ⚠️');
-        }
-    });
-}
-
+        if (isCustomReason) {
+            const customText = customReasonInput.value.trim();
+            if (customText) {
+                confirmReset(customText);
+            } else {
+                showCustomAlert('⚠️ PLEASE TYPE YOUR REASON OR SKIP! ⚠️');
+            }
+        } else if (selectedReason) {
 // Open modal
 function openModal() {
     modal.classList.add('active');
     selectedReason = null;
+    isCustomReason = false;
     
     // Remove all selected states
     document.querySelectorAll('.reason-item').forEach(item => {
         item.classList.remove('selected');
     });
     
+    // Hide and clear custom input
+    customReasonInput.classList.remove('active');
+    customReasonInput.value = '';
+    
     // Scroll to top of reasons
+    reasonsContainer.scrollTop = 0;
+}           
+            // Check if "OTHER" was selected
+            if (this.dataset.reason === "OTHER (Type your reason)") {
+                customReasonInput.classList.add('active');
+                customReasonInput.focus();
+                isCustomReason = true;
+                selectedReason = null;
+            } else {
+                customReasonInput.classList.remove('active');
+                customReasonInput.value = '';
+                isCustomReason = false;
+                selectedReason = this.dataset.reason;
+            }
+        });
+        
+        reasonsContainer.appendChild(reasonDiv);
+    });
+}   // Scroll to top of reasons
     reasonsContainer.scrollTop = 0;
 }
 
@@ -480,9 +465,8 @@ function showCustomAlert(message) {
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.8);
-        z-index: 9999;
-    `;
-    
+// Event listeners
+resetBtn.addEventListener('click', resetCounter);
     document.body.appendChild(overlay);
     document.body.appendChild(alertBox);
     
@@ -499,27 +483,17 @@ shareBtn.addEventListener('click', shareProgress);
 // Add hover sound effects (optional - visual feedback)
 const buttons = document.querySelectorAll('.btn');
 buttons.forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-        btn.style.animation = 'glitch 0.2s';
-        setTimeout(() => {
-            btn.style.animation = '';
-        }, 200);
-    });
-});
-
-// Initialize on load
-init();
-
 // Add keyboard shortcuts for neo punk experience
 document.addEventListener('keydown', (e) => {
     // Press 'R' to reset (open modal)
-    if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey) {
+    if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey && !customReasonInput.classList.contains('active')) {
         resetCounter();
     }
-    // Press 'S' to share
-    if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        shareProgress();
+    // Press 'Escape' to close modal
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});     shareProgress();
     }
     // Press 'Escape' to close modal
     if (e.key === 'Escape') {
